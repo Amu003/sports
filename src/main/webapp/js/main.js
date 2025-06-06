@@ -563,3 +563,67 @@ $(document).ready(function(){
   
 
  });
+ 
+ jQuery(function($) {
+     // Handle popup button click
+     $('.popup-button').on('click', function () {
+         $('body').addClass('overflow-hidden');
+         $('.product-popup-box').removeClass('active');
+
+         const popupBox = $(this).closest('.item, .single-product').next('.product-popup-box');
+         popupBox.addClass('active');
+     });
+
+     // Handle close button inside popup
+     $('.product-popup-box .close').on('click', function () {
+         $(this).closest('.product-popup-box').removeClass('active');
+         $('body').removeClass('overflow-hidden');
+     });
+
+     // Close popup when clicking outside content
+     $('.product-popup-box').on('click', function (e) {
+         if ($(e.target).is('.product-popup-box')) {
+             $(this).removeClass('active');
+             $('body').removeClass('overflow-hidden');
+         }
+     });
+	 
+	 $('.qty-minus').click(function () {
+	     let $input = $(this).siblings('.quantity-input');
+	     let val = parseInt($input.val()) || 1;
+	     if (val > 1) $input.val(val - 1);
+	 });
+
+	 $('.qty-plus').click(function () {
+	     let $input = $(this).siblings('.quantity-input');
+	     let val = parseInt($input.val()) || 1;
+	     $input.val(val + 1);
+	 });
+	 
+	 // Get the current page path without trailing slashes
+	 var currentPath = window.location.pathname.replace(/\/$/, ''); // Remove trailing slash
+	 console.log("Current Path:", currentPath);
+
+	 // Loop through each navigation link
+	 $('.primary-menu a').each(function() {
+	     // Get the href attribute of the link
+	     var href = $(this).attr('href').replace(/\/$/, ''); // Remove trailing slash
+	     console.log(href);
+
+	     // Get the last part of the href (after the last "/")
+	     var lastPartHref = href.substring(href.lastIndexOf('/') + 1);
+	     console.log(lastPartHref);
+
+	     // Check if the current path ends with the last part of the href
+	     if (currentPath.endsWith(lastPartHref)) {
+	         // Add the 'active' class to the corresponding <li> (parent of the <a>)
+	         $(this).closest('li').addClass('active');
+	     } else {
+	         // Remove the 'active' class from other <li> elements
+	         $(this).closest('li').removeClass('active');
+	     }
+	 });
+
+ });
+ 
+ 
