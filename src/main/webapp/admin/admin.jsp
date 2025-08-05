@@ -41,7 +41,7 @@
 
 
     <a href="../HomeController" target="contentFrame">Your Site</a>
-    <a href="dashboard-content.jsp" target="contentFrame">Dashboard Home</a>
+    <%-- <a href="dashboard-content.jsp" target="contentFrame">Dashboard Home</a> --%>
    <a href="../insertProduct" target="contentFrame">Insert Product</a>
 
     
@@ -52,7 +52,8 @@
     
     <a href="../userList" target="contentFrame">User List</a> <!-- Fixed typo cntentFrame to contentFrame -->
     <a href="ProductListController" target="contentFrame">Product List</a>
-    <a href="all-order.jsp" target="contentFrame">All Orders</a>
+    <a href="../order-list" target="contentFrame">All Orders</a>
+
     <a href="all-payment.jsp" target="contentFrame">All Payments</a>
 </div>
 

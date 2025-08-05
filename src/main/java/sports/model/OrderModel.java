@@ -17,6 +17,7 @@ public class OrderModel implements Serializable {
     private String orderNotes;
     private double totalAmount;
     private String orderDate;
+  
 
     // Getters and Setters
     public int getId() {
@@ -102,4 +103,8 @@ public class OrderModel implements Serializable {
     public void setOrderDate(String orderDate) {
         this.orderDate = orderDate;
     }
+
+   
+
+    
 }

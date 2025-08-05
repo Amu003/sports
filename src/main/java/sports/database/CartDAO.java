@@ -11,25 +11,50 @@ import sports.model.productModel;
 
 public class CartDAO {
 
-    // Save the cart item (product) for the user
-    public boolean saveCartItem(int userId, productModel product, int quantity) {
-        boolean success = false;
-        String query = "INSERT INTO cart(user_id, product_id, quantity) VALUES (?, ?, ?)";
+	// Save the cart item: update quantity if exists, insert otherwise
+	public boolean saveCartItem(int userId, productModel product, int quantity) {
+	    boolean success = false;
 
-        try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(query)) {
+	    try (Connection conn = DbConnection.getConnection()) {
+	        // Check if the item already exists
+	        String checkQuery = "SELECT quantity FROM cart WHERE user_id = ? AND product_id = ?";
+	        try (PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+	            checkStmt.setInt(1, userId);
+	            checkStmt.setInt(2, product.getId());
 
-            ps.setInt(1, userId);
-            ps.setInt(2, product.getId());
-            ps.setInt(3, quantity);
+	            ResultSet rs = checkStmt.executeQuery();
 
-            success = ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace(); // Handle error gracefully in production
-        }
+	            if (rs.next()) {
+	                // Item exists — update quantity
+	                int existingQuantity = rs.getInt("quantity");
+	                int newQuantity = existingQuantity + quantity;
 
-        return success;
-    }
+	                String updateQuery = "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
+	                try (PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+	                    updateStmt.setInt(1, newQuantity);
+	                    updateStmt.setInt(2, userId);
+	                    updateStmt.setInt(3, product.getId());
+	                    success = updateStmt.executeUpdate() > 0;
+	                }
+	            } else {
+	                // Item does not exist — insert new
+	                String insertQuery = "INSERT INTO cart(user_id, product_id, quantity) VALUES (?, ?, ?)";
+	                try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery)) {
+	                    insertStmt.setInt(1, userId);
+	                    insertStmt.setInt(2, product.getId());
+	                    insertStmt.setInt(3, quantity);
+	                    success = insertStmt.executeUpdate() > 0;
+	                }
+	            }
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return success;
+	}
+
 
     // Get the cart items for the user based on userId
     public List<CartModel> getCartByUserId(int userId) {

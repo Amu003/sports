@@ -104,7 +104,7 @@
 	                                <option disabled selected>Select option</option>
 	                                <option value="cod">Cash on delivery</option>
 	                                <option value="esewa">Esewa</option>
-	                                <option value="card">Stripe</option>
+	                                
 	                            </select>
 	                            <br>
 	                            <button type="submit" class="primary-btn">Process Payment</button>

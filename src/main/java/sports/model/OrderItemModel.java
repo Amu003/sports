@@ -1,4 +1,4 @@
-package sports.model;
+	package sports.model;
 
 public class OrderItemModel {
     private int orderId;
@@ -7,7 +7,8 @@ public class OrderItemModel {
     private double price;
     private int quantity;
     private String status;
-
+    private int id;
+    private String delivered;
     // Getters and Setters
     public int getOrderId() {
         return orderId;
@@ -50,4 +51,24 @@ public class OrderItemModel {
     public void setStatus(String status) {
         this.status = status;
     }
+   
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+  
+
+    public String getDelivered() {
+        return delivered;
+    }
+
+    public void setDelivered(String delivered) {
+        this.delivered = delivered;
+    }
+
+
 }

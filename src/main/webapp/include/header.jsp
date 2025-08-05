@@ -73,7 +73,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item"><a href="CartController" class="cart"><span class="ti-bag"></span></a></li>
                         <li class="nav-item">
-                            <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button>
+                           <%-- <button class="search"><span class="lnr lnr-magnifier" id="search"></span></button> --%>
                         </li>
                         <% if (user != null) { %>
                             <li class="nav-item align-content-center">
