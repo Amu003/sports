@@ -100,7 +100,7 @@
                                     <input type="hidden" name="productId" value="<%= product.getId() %>">
                                     <input type="hidden" name="action" value="addToCart">
                                     <button type="button" class="qty-btn qty-minus">-</button>
-                                    <input type="number" name="quantity" class="quantity-input" value="1" min="1">
+                                    <input type="number" name="quantity" class="quantity-input" max="<%= product.getStock()%>"value="1" min="1">
                                     <button type="button" class="qty-btn qty-plus">+</button>
                                 </div>
                             </div>
