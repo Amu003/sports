@@ -96,6 +96,18 @@
             <label for="image">Upload New Image (Optional)</label>
             <input type="file" name="image" id="image">
         </div>
+        <div class="form-group">
+    <label for="stock">Stock Quantity</label>
+    <input type="number" id="stock" name="stock" value="<%= product.getStock() %>" required>
+    
+    <label>Brand:</label>
+<input type="text" name="brand" value="<%= product.getBrand() %>" required />
+
+<label>Sizes (optional):</label>
+<input type="text" name="sizes" value="<%= product.getSizes() %>" />
+    
+</div>
+        
 
         <div class="form-group">
             <label for="category">Category</label>

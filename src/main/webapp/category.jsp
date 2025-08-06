@@ -55,7 +55,7 @@
 				            List<sports.model.productModel> productList = (List<sports.model.productModel>) request.getAttribute("products");
 				            if (productList != null) {
 				                for (sports.model.productModel product : productList) {
-				                    request.setAttribute("product", product); // ✅ Pass the current product
+				                    request.setAttribute("product", product); // 
 				        %>
 				        <div class="col-lg-4 col-md-6">
     						<jsp:include page="asset/product.jsp" />

@@ -13,43 +13,43 @@ import java.nio.file.Paths;
 
 @WebServlet("/update-product")
 @MultipartConfig(
-    fileSizeThreshold = 1024 * 1024 * 2,   // 2MB
-    maxFileSize = 1024 * 1024 * 10,        // 10MB
-    maxRequestSize = 1024 * 1024 * 50      // 50MB
+    fileSizeThreshold = 1024 * 1024 * 2,
+    maxFileSize = 1024 * 1024 * 10,
+    maxRequestSize = 1024 * 1024 * 50
 )
 public class EditProductController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    private static final String IMAGE_UPLOAD_DIR = "webapp/img/product";
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        // Get parameters
+        // Get basic product details
         int id = Integer.parseInt(request.getParameter("id"));
         String name = request.getParameter("name");
         String description = request.getParameter("description");
         double price = Double.parseDouble(request.getParameter("price"));
         int categoryId = Integer.parseInt(request.getParameter("category_id"));
 
-        // File handling
+        // NEW: Get stock, brand, sizes
+        int stock = Integer.parseInt(request.getParameter("stock"));
+        String brand = request.getParameter("brand");
+        String sizes = request.getParameter("sizes");
+
+        // Handle image upload
         Part imagePart = request.getPart("image");
         String fileName = null;
 
         if (imagePart != null && imagePart.getSize() > 0) {
             fileName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
 
-            String appPath = request.getServletContext().getRealPath("");
-            String savePath = appPath + File.separator + IMAGE_UPLOAD_DIR;
+            String uploadPath = request.getServletContext().getRealPath("/img/product");
+            File uploadDir = new File(uploadPath);
+            if (!uploadDir.exists()) uploadDir.mkdirs();
 
-            File fileSaveDir = new File(savePath);
-            if (!fileSaveDir.exists()) {
-                fileSaveDir.mkdirs();
-            }
-
-            imagePart.write(savePath + File.separator + fileName);
+            imagePart.write(uploadPath + File.separator + fileName);
         }
 
-        // Get existing product from DB
+        // Get existing product
         ProductService service = new ProductService();
         productModel product = service.getProductById(id);
 
@@ -58,12 +58,15 @@ public class EditProductController extends HttpServlet {
         product.setDescription(description);
         product.setPrice(price);
         product.setCategory(categoryId);
+        product.setStock(stock); // ✅ update stock
+        product.setBrand(brand); // ✅ update brand
+        product.setSizes(sizes); // ✅ update sizes
 
         if (fileName != null) {
-            product.setImage(IMAGE_UPLOAD_DIR + "/" + fileName); // Set full relative path
+            product.setImage("img/product/" + fileName); // ✅ updated image
         }
 
-        // Update in DB
+        // Save update
         service.updateProduct(product);
 
         // Redirect to product list

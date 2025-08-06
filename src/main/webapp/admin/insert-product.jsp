@@ -49,10 +49,22 @@
 
     <label>Price:</label>
     <input type="number" name="price" step="0.01" required>
+    
+     <label>Stock Quantity:</label>
+<input type="number" name="stock" min="0" required>
+<label>Brand:</label>
+<input type="text" name="brand" required />
+
+<label>Sizes (optional):</label>
+<input type="text" name="sizes" placeholder="e.g., 40,41,42 or SH, LH" />
+
 
 
     <label>Category:</label>
     <select name="category">
+   
+   
+    
 <%
     List<sports.model.CategoryModel> catList = (List<sports.model.CategoryModel>) request.getAttribute("categories");
     if (catList != null) {
@@ -69,6 +81,11 @@
 
     <input type="submit" value="Add Product">
 </form>
+<% String error = (String) request.getAttribute("errorMessage");
+   if (error != null) { %>
+    <p style="color: red; text-align: center;"><%= error %></p>
+<% } %>
 
 </body>
 </html>
+

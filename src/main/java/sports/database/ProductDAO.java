@@ -9,7 +9,7 @@ public class ProductDAO {
 
     // Insert a product into database
     public boolean insertProduct(productModel product) {
-        String sql = "INSERT INTO products (name, description, image, price, category_id) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products (name, description, image, price, category_id, stock, brand, sizes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -19,6 +19,9 @@ public class ProductDAO {
             ps.setString(3, product.getImage());
             ps.setDouble(4, product.getPrice());
             ps.setInt(5, product.getCategory());
+            ps.setInt(6, product.getStock());
+            ps.setString(7, product.getBrand());
+            ps.setString(8, product.getSizes());
 
             return ps.executeUpdate() > 0;
 
@@ -45,6 +48,9 @@ public class ProductDAO {
                 product.setDescription(rs.getString("description"));
                 product.setPrice(rs.getDouble("price"));
                 product.setCategory(rs.getInt("category_id"));
+                product.setStock(rs.getInt("stock"));
+                product.setBrand(rs.getString("brand"));
+                product.setSizes(rs.getString("sizes"));
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -54,7 +60,6 @@ public class ProductDAO {
     }
 
     // Fetch products by category
- // Change the parameter type from int to String
     public List<productModel> getProductsByCategory(String category) {
         List<productModel> products = new ArrayList<>();
         String query = "SELECT * FROM products WHERE category_id = ?";
@@ -62,7 +67,6 @@ public class ProductDAO {
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            // Set the category as String parameter
             stmt.setString(1, category);
             ResultSet rs = stmt.executeQuery();
 
@@ -74,6 +78,9 @@ public class ProductDAO {
                 product.setDescription(rs.getString("description"));
                 product.setPrice(rs.getDouble("price"));
                 product.setCategory(rs.getInt("category_id"));
+                product.setStock(rs.getInt("stock"));
+                product.setBrand(rs.getString("brand"));
+                product.setSizes(rs.getString("sizes"));
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -81,7 +88,6 @@ public class ProductDAO {
         }
         return products;
     }
-
 
     // Fetch all distinct categories
     public List<String> getAllCategories() {
@@ -131,6 +137,9 @@ public class ProductDAO {
                 product.setImage(rs.getString("image"));
                 product.setPrice(rs.getDouble("price"));
                 product.setCategory(rs.getInt("category_id"));
+                product.setStock(rs.getInt("stock"));
+                product.setBrand(rs.getString("brand"));
+                product.setSizes(rs.getString("sizes"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,7 +149,7 @@ public class ProductDAO {
 
     // Update a product
     public boolean updateProduct(productModel product) {
-        String sql = "UPDATE products SET name = ?, description = ?, image = ?, price = ?, category_id = ? WHERE id = ?";
+        String sql = "UPDATE products SET name = ?, description = ?, image = ?, price = ?, category_id = ?, stock = ?, brand = ?, sizes = ? WHERE id = ?";
 
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -150,7 +159,10 @@ public class ProductDAO {
             ps.setString(3, product.getImage());
             ps.setDouble(4, product.getPrice());
             ps.setInt(5, product.getCategory());
-            ps.setInt(6, product.getId());
+            ps.setInt(6, product.getStock());
+            ps.setString(7, product.getBrand());
+            ps.setString(8, product.getSizes());
+            ps.setInt(9, product.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -159,4 +171,23 @@ public class ProductDAO {
         }
         return false;
     }
+    public boolean reduceStock(int productId, int quantity) {
+        String sql = "UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?";
+
+        try (Connection conn = DbConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.setInt(3, quantity);  // Ensure stock is not reduced below 0
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

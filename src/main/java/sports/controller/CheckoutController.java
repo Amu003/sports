@@ -57,18 +57,34 @@ public class CheckoutController extends HttpServlet {
         }
 
         try {
-            // Save order to the database
-            OrderDAO orderDAO = new OrderDAO();
-            int orderId = orderDAO.saveOrder(user.getId(), cart, firstName, lastName, address, city, phone, email, paymentMethod, orderNotes);
+        	// Save order to the database
+        	OrderDAO orderDAO = new OrderDAO();
+        	int orderId = orderDAO.saveOrder(user.getId(), cart, firstName, lastName, address, city, phone, email, paymentMethod, orderNotes);
 
-            if (orderId == -1) {
-                req.setAttribute("error", "There was a problem processing your order. Please try again.");
-                req.getRequestDispatcher("checkout.jsp").forward(req, resp);
-                return;
-            }
+        	if (orderId == -1) {
+        	    req.setAttribute("error", "There was a problem processing your order. Please try again.");
+        	    req.getRequestDispatcher("checkout.jsp").forward(req, resp);
+        	    return;
+        	}
 
-            // Clear cart after successful order
-            session.removeAttribute("cart");
+        	// 🔻 Reduce product stock after successful order
+        	ProductDAO productDAO = new ProductDAO();
+        	for (CartModel item : cart) {
+        	    int productId = item.getProduct().getId();
+        	    int quantity = item.getQuantity();
+
+        	    boolean reduced = productDAO.reduceStock(productId, quantity);
+        	    if (!reduced) {
+        	        System.out.println(" Stock reduction failed for product ID: " + productId);
+        	        // Optional: You may want to roll back the order in future improvements
+        	    }
+        	}
+
+        	//  Clear cart after successful order and stock update
+        	session.removeAttribute("cart");
+
+
+           
 
             // Set confirmation message
             String successMessage = "Your order has been placed successfully. Your order ID is: " + orderId + ". Total Amount: " + totalAmount;
@@ -84,7 +100,7 @@ public class CheckoutController extends HttpServlet {
             resp.getWriter().println("<html><body>");
             resp.getWriter().println("<h2>" + successMessage + "</h2>");
             resp.getWriter().println("<p>Thank you for your purchase!</p>");
-            resp.getWriter().println("<a href='index.jsp'>Go back to home page</a>");
+            resp.getWriter().println("<a href='HomeController'>Go back to home page</a>");
             resp.getWriter().println("</body></html>");
 
         } catch (Exception e) {

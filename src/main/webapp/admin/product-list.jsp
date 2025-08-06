@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import=" java.util.List" %>
 <%@ page import="sports.model.productModel" %>
@@ -64,6 +65,10 @@
         <th>Image</th>
         <th>Price (Rs.)</th>
         <th>Category ID</th>
+        <th>Brand</th>
+<th>Sizes</th>
+<th>Stock</th>
+        
         <th>Actions</th> <!-- New Actions Column -->
     </tr>
 
@@ -81,6 +86,10 @@
 
             <td><%= product.getPrice() %></td>
             <td><%= product.getCategory() %></td>
+            <td><%= product.getBrand() %></td>
+<td><%= product.getSizes() %></td>
+<td><%= product.getStock() %></td>
+            
             <td>
     <a href="edit-product.jsp?id=<%= product.getId() %>">
         <button class="edit-btn">Edit</button>

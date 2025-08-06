@@ -21,6 +21,17 @@
 <!-- Start Banner Area -->
 <section class="banner-area organic-breadcrumb">
     <div class="container">
+    <%
+    String error = (String) request.getAttribute("error");
+    if (error != null && !error.isEmpty()) {
+%>
+    <div class="alert alert-danger" style="margin-top: 20px;">
+        <%= error %>
+    </div>
+<%
+    }
+%>
+    
         <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
             <div class="col-first">
                 <h1>Shopping Cart</h1>
@@ -76,6 +87,8 @@
                                            min="1"
                                            class="form-control quantity-input"
                                            data-price="<%= item.getProduct().getPrice() %>"
+                                           
+                                           
                                            style="width:80px;">
                                     <input type="hidden" name="productIds" value="<%= item.getProduct().getId() %>">
                                 </td>

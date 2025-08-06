@@ -86,14 +86,21 @@ public class CategoryProductController extends HttpServlet {
                 productModel product = productDAO.getProductById(productId);
 
                 if (product == null) {
-                    req.setAttribute("error", "Product not found.");
-                    req.getRequestDispatcher("errorPage.jsp").forward(req, resp);
+                    resp.sendRedirect("product.jsp?id=" + productId + "&error=" + 
+                        java.net.URLEncoder.encode("Product not found.", "UTF-8"));
+                    return;
+                }
+
+                if (product.getStock() < quantity) {
+                    String msg = "Sorry, only " + product.getStock() + " item(s) in stock.";
+                    resp.sendRedirect("product.jsp?id=" + productId + "&error=" + 
+                        java.net.URLEncoder.encode(msg, "UTF-8"));
                     return;
                 }
 
                 if (quantity <= 0) {
-                    req.setAttribute("error", "Invalid quantity.");
-                    req.getRequestDispatcher("errorPage.jsp").forward(req, resp);
+                    resp.sendRedirect("product.jsp?id=" + productId + "&error=" + 
+                        java.net.URLEncoder.encode("Invalid quantity.", "UTF-8"));
                     return;
                 }
 

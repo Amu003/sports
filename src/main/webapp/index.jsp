@@ -15,7 +15,7 @@
     <p>User: <%= (user != null) ? user.getName() : "null" %></p>
 </div>
 
-<!-- ===== Banner Area ===== -->
+<!-- ===== Banner Area ===== -->	
 <section class="banner-area">
     <div class="container">
         <div class="row fullscreen align-items-center justify-content-start">

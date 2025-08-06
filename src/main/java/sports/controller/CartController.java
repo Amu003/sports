@@ -3,6 +3,8 @@ package sports.controller;
 import sports.model.CartModel;
 import sports.model.userModel;
 import sports.database.CartDAO;
+import sports.database.ProductDAO;
+import sports.model.productModel;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,7 +17,6 @@ import java.util.List;
 public class CartController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    // Handle GET request - Show cart or remove item
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -43,14 +44,12 @@ public class CartController extends HttpServlet {
             }
         }
 
-        // Show updated cart
         List<CartModel> cartItems = new CartDAO().getCartByUserId(userId);
         req.setAttribute("cartItems", cartItems);
         RequestDispatcher dispatcher = req.getRequestDispatcher("cart.jsp");
         dispatcher.forward(req, resp);
     }
 
-    // Handle POST request - Update cart quantities
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -73,16 +72,39 @@ public class CartController extends HttpServlet {
 
             if (productIds != null && quantities != null) {
                 CartDAO cartDAO = new CartDAO();
+                ProductDAO productDAO = new ProductDAO();
+
+                StringBuilder errorMessage = new StringBuilder();
+
                 for (int i = 0; i < productIds.length; i++) {
                     try {
                         int productId = Integer.parseInt(productIds[i]);
                         int quantity = Integer.parseInt(quantities[i]);
 
-                        cartDAO.updateQuantity(userId, productId, quantity);
+                        productModel product = productDAO.getProductById(productId);
+                        int stock = product.getStock();
+
+                        if (quantity <= stock && quantity > 0) {
+                            cartDAO.updateQuantity(userId, productId, quantity);
+                        } else {
+                            errorMessage.append("Product '")
+                                        .append(product.getName())
+                                        .append("' has only ")
+                                        .append(stock)
+                                        .append(" in stock.<br>");
+                        }
 
                     } catch (NumberFormatException e) {
-                        e.printStackTrace(); // Bad input
+                        e.printStackTrace(); // Handle bad input
                     }
+                }
+
+                if (errorMessage.length() > 0) {
+                    req.setAttribute("error", errorMessage.toString());
+                    List<CartModel> cartItems = cartDAO.getCartByUserId(userId);
+                    req.setAttribute("cartItems", cartItems);
+                    req.getRequestDispatcher("cart.jsp").forward(req, resp);
+                    return;
                 }
             }
 
@@ -90,4 +112,3 @@ public class CartController extends HttpServlet {
         }
     }
 }
-	

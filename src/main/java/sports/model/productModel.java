@@ -1,9 +1,13 @@
+
 package sports.model;
 
 public class productModel {
     private int id, categoryId;
     private String name, image, description;
     private double price;
+    private int stock;
+    private String brand;
+    private String sizes;
 
     // Getter and Setter for 'id'
     public int getId() {
@@ -58,4 +62,23 @@ public class productModel {
     public void setCategory(int category) {
         this.categoryId = category;
     }
+   
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+    public String getBrand() {
+    	return brand;
+    	}
+    public void setBrand(String brand) {
+    	this.brand = brand;
+    	}
+
+    public String getSizes()
+    { return sizes; }
+    public void setSizes(String sizes) { this.sizes = sizes; }
 }
