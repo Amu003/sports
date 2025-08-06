@@ -21,17 +21,17 @@
 <div class="single-product">
     <img class="img-fluid" src="/sports/<%= product.getImage() %>" alt="">
     <div class="product-details">
-        <h6><%= product.getName() %></h6>
+        <h6><a href="/sports/ProductDetailController?id=<%= product.getId() %>" title="<%= product.getName() %>" class="text-dark"><%= product.getName() %></a></h6>
         <div class="price">
             <h6>Rs <%= product.getPrice() %></h6>
         </div>
-        <p><strong>Brand:</strong> <%= product.getBrand() %></p>
+        <div><strong>Brand:</strong> <%= product.getBrand() %></div>
 
         <% if (product.getSizes() != null && !product.getSizes().isEmpty()) { %>
-            <p><strong>Sizes:</strong> <%= product.getSizes() %></p>
+            <div><strong>Sizes:</strong> <%= product.getSizes() %></div>
         <% } %>
 
-        <p><%= product.getStock() > 0 ? product.getStock() + " item(s) left" : "Out of Stock" %></p>
+        <p><%= product.getStock() > 0 ? product.getStock() + " items left" : "Out of Stock" %></p>
 
         <div class="prd-bottom">
             <% if (product.getStock() > 0) { %>
@@ -78,7 +78,7 @@
                     </div>
                     <div class="product-details p-m-0">
                         <p><%= product.getDescription() %></p>
-                        <p><strong>Stock:</strong> <%= product.getStock() > 0 ? product.getStock() + " item(s) available" : "Out of Stock" %></p>
+                        <p><strong>Stock:</strong> <%= product.getStock() > 0 ? product.getStock() + " item available" : "Out of Stock" %></p>
                         <p><strong>Brand:</strong> <%= product.getBrand() %></p>
                         <% if (product.getSizes() != null && !product.getSizes().isEmpty()) { %>
                             <p><strong>Sizes:</strong> <%= product.getSizes() %></p>

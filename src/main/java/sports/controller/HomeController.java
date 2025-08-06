@@ -60,7 +60,8 @@ public class HomeController extends HttpServlet {
 
             for (int i = 0; i < maxCategories; i++) {
                 int categoryId = topCategories.get(i);
-                List<productModel> categoryProducts = productDAO.getProductsByCategory(String.valueOf(categoryId));
+                List<productModel> categoryProducts = productDAO.getProductsByCategory(categoryId);
+
 
                 int count = 0;
                 for (productModel product : categoryProducts) {

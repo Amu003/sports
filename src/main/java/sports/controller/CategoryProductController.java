@@ -43,10 +43,16 @@ public class CategoryProductController extends HttpServlet {
         List<productModel> products;
 
         if (categoryId != null && !categoryId.isEmpty()) {
-            products = productDAO.getProductsByCategory(categoryId);
+            try {
+                int catId = Integer.parseInt(categoryId);
+                products = productDAO.getProductsByCategory(catId); // pass int here
+            } catch (NumberFormatException e) {
+                products = productDAO.getAllProducts(); // fallback if parsing fails
+            }
         } else {
             products = productDAO.getAllProducts();
         }
+
 
         request.setAttribute("products", products);
         RequestDispatcher dispatcher = request.getRequestDispatcher("category.jsp");

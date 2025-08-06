@@ -23,9 +23,10 @@ public class ProductService {
     }
 
     // Method to get products by category (optional)
-    public List<productModel> getProductsByCategory(String category) {
-        return productDAO.getProductsByCategory(category);
+    public List<productModel> getProductsByCategory(int categoryId) {
+        return productDAO.getProductsByCategory(categoryId);
     }
+
 
     // Method to get all distinct categories from the products table
     public List<String> getAllCategories() {
